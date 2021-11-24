@@ -18,10 +18,11 @@ server <- function(input, output, session) {
     #      programming features but it is a good template to practice
     #      refactoring and separation of concerns
 
-    data <- quakes$mag
+    data <- quakes$long
+
     radius <- 10^quakes$mag/10  # Could this be extracted into a meaningful method??
 
-    colorMap <- lib$greet$hazardColor(data)  # Should a coloring method live in R/greet.R??
+    colorMap <- lib$greet$hazardColor(data, domainType="minmax")  # Should a coloring method live in R/greet.R??
 
     output$map <- renderLeaflet({
         leaflet(quakes) %>%
