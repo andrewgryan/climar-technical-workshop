@@ -19,10 +19,10 @@ server <- function(input, output, session) {
     #      programming features but it is a good template to practice
     #      refactoring and separation of concerns
 
-    data <- quakes$mag
-    radius <- get_radius(data)  # Could this be extracted into a meaningful method??
+    magnitude <- quakes$mag
+    radius <- get_radius(magnitude)  # Could this be extracted into a meaningful method??
 
-    colorMap <- lib$greet$hazardColor(data)  # Should a coloring method live in R/greet.R??
+    colorMap <- lib$greet$hazardColor(magnitude)  # Should a coloring method live in R/greet.R??
 
     output$map <- renderLeaflet({
         leaflet(quakes) %>%
@@ -31,10 +31,10 @@ server <- function(input, output, session) {
             addCircles(radius = radius,
                        stroke=FALSE,
                        fillOpacity=1,
-                       fillColor=colorMap(data)) %>%
+                       fillColor=colorMap(magnitude)) %>%
             addLegend(position = "bottomright",
                       pal = colorMap,
-                      values = data
+                      values = magnitude
             )
 
 
