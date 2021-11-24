@@ -2,6 +2,8 @@ library(shiny)
 library(leaflet)
 library(modules)
 
+# Code change
+
 lib <- use("R")  # Loads code from R/ directory
 
 ui <- fillPage(
@@ -16,10 +18,11 @@ server <- function(input, output, session) {
     #      programming features but it is a good template to practice
     #      refactoring and separation of concerns
 
-    data <- quakes$mag
+    data <- quakes$long
+
     radius <- 10^quakes$mag/10  # Could this be extracted into a meaningful method??
 
-    colorMap <- lib$greet$hazardColor(data)  # Should a coloring method live in R/greet.R??
+    colorMap <- lib$greet$hazardColor(data, domainType="minmax")  # Should a coloring method live in R/greet.R??
 
     output$map <- renderLeaflet({
         leaflet(quakes) %>%
@@ -31,7 +34,8 @@ server <- function(input, output, session) {
                        fillColor=colorMap(data)) %>%
             addLegend(position = "bottomright",
                       pal = colorMap,
-                      values = data
+                      values = data,
+                      opacity = 1
             )
 
 
