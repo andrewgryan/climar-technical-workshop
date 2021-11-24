@@ -16,10 +16,13 @@ server <- function(input, output, session) {
     #      programming features but it is a good template to practice
     #      refactoring and separation of concerns
 
-    data <- quakes$mag
+    data <- reactive({
+        ifelse(input$scheme == 'Risk', quakes$mag, log(quakes$depth))
+    })
+
     radius <- 10^quakes$mag/10  # Could this be extracted into a meaningful method??
 
-    colorMap <- lib$greet$hazardColor(data)  # Should a coloring method live in R/greet.R??
+    colorMap <- lib$greet$hazardColor(c(quakes$mag, log(quakes$depth)))  # Should a coloring method live in R/greet.R??
 
     output$map <- renderLeaflet({
         leaflet(quakes) %>%
@@ -28,10 +31,10 @@ server <- function(input, output, session) {
             addCircles(radius = radius,
                        stroke=FALSE,
                        fillOpacity=1,
-                       fillColor=colorMap(data)) %>%
+                       fillColor=colorMap(data())) %>%
             addLegend(position = "bottomright",
                       pal = colorMap,
-                      values = data
+                      values = data()
             )
 
 
